@@ -1,6 +1,6 @@
 import streamlit as st
 import os
-from streamlit_webrtc import webrtc_streamer
+from streamlit_webrtc import webrtc_streamer, VideoTransformerBase
 
 # -- Set Page Config BEFORE any other Streamlit calls --
 st.set_page_config(
@@ -8,6 +8,14 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+
+# Define a custom video transformer for webcam processing (placeholder for gesture recognition logic)
+class HandGestureTransformer(VideoTransformerBase):
+    def transform(self, frame):
+        # Placeholder for hand gesture recognition logic
+        # Add any processing on the frames here
+        return frame  # Currently, this returns the frame without any changes
 
 
 def main():
@@ -80,7 +88,13 @@ def main():
         # Embed Webcam Stream using streamlit-webrtc
         st.markdown("### Webcam Feed")
         st.write("The webcam feed will be used to analyze and recognize hand gestures in real-time.")
-        webrtc_streamer(key="motor-therapy-webcam")
+
+        # Use the custom transformer for gesture recognition (currently a placeholder)
+        webrtc_streamer(
+            key="motor-therapy-webcam",
+            video_transformer_factory=HandGestureTransformer,
+            media_stream_constraints={"video": True, "audio": False}
+        )
 
         # Optional: Dynamically load additional functionality from `motor.py`
         if os.path.exists("motor.py"):
