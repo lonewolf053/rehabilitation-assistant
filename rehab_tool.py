@@ -1,7 +1,6 @@
-# rehab_tool.py
-
 import streamlit as st
 import os
+from streamlit_webrtc import webrtc_streamer
 
 # -- Set Page Config BEFORE any other Streamlit calls --
 st.set_page_config(
@@ -10,6 +9,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+
 def main():
     st.title("🩺 Comprehensive AI-Enhanced Rehabilitation Tool for Stroke Patients")
     st.write(
@@ -17,7 +17,7 @@ def main():
         **Welcome!** This integrated application assists stroke patients with both 
         **motor therapy** (hand gesture recognition), **speech therapy** (pronunciation training),
         and **telemedicine** (real-time consultations with therapists).
-        
+
         Please select the **Therapy Module** you'd like to use below.
         """
     )
@@ -39,11 +39,11 @@ def main():
             1. Use your **webcam** to track your hand gestures.
             2. **Record** a new gesture or **use** an existing one.
             3. Receive real-time, color-coded feedback on your progress.
-            
+
             **Tip**: Watch the rehabilitation exercise videos available in the resources section to guide you!
             """
         )
-    
+
     elif therapy_option == "Speech Therapy":
         st.markdown(
             """
@@ -53,7 +53,7 @@ def main():
             3. Receive **feedback** on correct sounds and areas for improvement.
             """
         )
-    
+
     else:  # Telemedicine
         st.markdown(
             """
@@ -76,6 +76,13 @@ def main():
             and receive real-time, color-coded feedback on your progress.
             """
         )
+
+        # Embed Webcam Stream using streamlit-webrtc
+        st.markdown("### Webcam Feed")
+        st.write("The webcam feed will be used to analyze and recognize hand gestures in real-time.")
+        webrtc_streamer(key="motor-therapy-webcam")
+
+        # Optional: Dynamically load additional functionality from `motor.py`
         if os.path.exists("motor.py"):
             with open("motor.py", "r", encoding="utf-8") as f:
                 code = f.read()
@@ -120,7 +127,6 @@ def main():
         )
 
         # Generate a unique room name or use a fixed one
-        # For demonstration, we'll use a fixed room name. In production, consider dynamic room names.
         room_name = "RehabToolTelemedicine"
         jitsi_url = f"https://meet.jit.si/{room_name}"
 
@@ -133,8 +139,6 @@ def main():
             """
         )
 
-   
-   
 
 if __name__ == "__main__":
     main()
